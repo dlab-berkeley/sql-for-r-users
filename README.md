@@ -1,1 +1,1 @@
-# sql-workshop
+# sql-for-tidy-users
