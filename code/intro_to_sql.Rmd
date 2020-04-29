@@ -1,0 +1,392 @@
+---
+title: "SQL for R Users"
+author: "Jae Yeon Kim"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r, echo=FALSE}
+# Run this, if knitting doesn't work
+knitr::opts_chunk$set(error = TRUE)
+```
+
+* Special thanks to Jacob Coblnetz (@Jacob_Coblnetz) for sharing his slides on the SQL workshop used at MIT. 
+
+# Motivation
+
+> 1. Designed vs. Found Data ([Salganik 2017](https://www.bitbybitbook.com/))
+
+- Designed (e.g., Survey data, Experimental data; Small/medium size) vs.
+
+- Found Data (e.g., Administrative data, Corporate data; Often Large) 
+
+> 2. The varieties of the datasets ([Pradeep and Moy 2015](https://rstudio-pubs-static.s3.amazonaws.com/72295_692737b667614d369bd87cb0f51c9a4b.html)): 
+
+- Small (what most of you have worked with)
+
+- Medium (1-2 GB)
+
+- Large (2 - 10 GB)
+
+- Very large (> 10 GB) 
+
+> 3. Recipes for big data:
+
+
+- Slice and dice: `read.csv("file_address", nrows = 20` or `data.table::fread()`
+    
+- Parallel processing: (`partition`, `summarize`, and `collect` from the `multidplyr` package)
+
+- Multiple sessions: `bigmemory::read.big.matrix()` or `ff::read.csv.ffdf()` 
+
+- Distributed filesystem: [RHadoop](https://github.com/RevolutionAnalytics/RHadoop/wiki). [Almost an only option for a dataset larger than 5TB](https://www.chrisstucchio.com/blog/2013/hadoop_hatred.html).
+     
+- SQL: Extracting data from a database. SQL is a staple tool in the non-academic world to perform this task. Key idea: Local dataframe -> Database. The focus of today's workshop 
+     
+# What is SQL? 
+
+- Structured Query Language. Called SEQUEL and developed by IBM Corporation in the 1970s 
+
+- Remains the standard language for a relational database management system.
+
+- It's a DECLARATIVE language ([compute what you want to compute not how to compute it](https://www.sqlite.org/queryplanner.html))
+    
+- Its main job is to define and query databases (i.e., two-dimensional tables). 
+    
+- Great for keeping data type integrity, updating data frequently, joining different data sources, and doing quick data analyses 
+
+# Learning objectives 
+
+> * Embracing a new mindset: from ownership (opening CSVs in your laptop) to access (accessing data stored in the database)
+
+> * Learning how to access and query a database in R in a tidy way 
+
+* SQL and R
+
+SQL           | R
+------------- | --------------------------------------------------------------------------
+SELECT        | select() for columns, mutate() for expressions, summarise() for aggregates
+FROM          | which data frame 
+WHERE         | filter()
+GROUP BY      | group_by()
+HAVING        | filter() after group_by()
+ORDER BY      | arrange()
+LIMIT         | head()
+    
+# Setup
+
+- `pacman::p_load()` reduces steps for installing and loading several packages simultaneously. 
+
+```{r}
+
+rm(list = ls())
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+ tidyverse, # tidyverse packages 
+ conflicted, # an alternative conflict resolution strategy
+ pyrr, # for inspecting memory allocations 
+ dbplyr, # to use database with dplyr 
+ DBI, # for using SQL queries
+ RSQLite, # for SQLite
+ odbc, # backend engine; open data connectivity driver
+ RPostgres, # PostgreSQL
+ sqldf, # for running SQL in R
+ tidyquery, # sqldf alternative 
+ nycflights13 # for test data 
+)
+
+# Resoving conflicting functions 
+conflict_prefer("filter", "dplyr")
+conflict_prefer("sql", "dplyr")
+```
+
+# Data sets 
+
+We use [the flight on-time performance data](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236) from the Bureau of Transpiration Statistics of the U.S. government. The data goes back to 1987 and its size is more than 20 gigabytes. For practice, we only use a small subset of the original data (flight data departing NYC in 2013) provided by RStudio.
+
+## Connect to the database 
+
+- This part draws heavily on the `dbplyr` package vignette. 
+
+- The `DBI` package provides a client-side interface that allows `dplyr` to work with databases. DBI is automatically installed when you installed `dbplyr`. However, you need to install a specific backend engine (a tool for communication between R and a database management system) for the database (e.g., `RMariaDB`, `RPostgres`, `RSQLite`, `obdc`, `bigrquery`). In this workshop, we use SQLite because it is the easiest to get started with. Personally, I love PostgreSQL because it's an open-source and also powerful to do [many amazing things](https://www.postgresql.org/docs/current/functions.html) (e.g., text mining, geospatial analysis).
+
+- If you want to connect to the database not manually, you can use the Connections interface in RStudio. 
+
+- Here's [some information](https://db.rstudio.com/dbi) on the historical background of the package.
+
+```{r}
+
+# Define a backend engine 
+
+drv <- RSQLite::SQLite()
+
+# Create an empty in-memory database 
+
+con <- DBI::dbConnect(drv, 
+                      dbname = ":memory:")
+
+#con <- DBI::dbConnect(RMariaDB::MariaDB(), 
+ # host = "database.rstudio.com",
+ # user = "hadley",
+ # password = rstudioapi::askForPassword("Database password")
+#)
+
+# Copy a local data frame to a DBI backend 
+
+copy_to(dest = con, # remote data source
+        df = flights) # a local dataframe 
+
+copy_to(dest = con, # remote data source 
+        df = airports) # a local dataframe 
+
+# Note that we didn't load the data.
+
+src_dbi(con)
+
+```
+
+Show the list of tables. 
+
+```{r}
+
+# Return the name of the tables
+dbListTables(con)
+
+```
+    
+## Query using dbplyr 
+
+- The `tbl` object is lazily evaluated; It doesn't pull the data until you explicitly ask for it. 
+
+```{r}
+
+# Select all columns from flights table and show the first ten rows 
+
+dbGetQuery(con, "SELECT * FROM flights;") %>%
+  head(10)
+
+# Select dep_delay and arr_delay from flights table and show the first ten rows 
+
+dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
+  head(10)
+
+# Select dep_delay and arr_delay from flights table, show the first ten rows, then turn the result into a tibble.
+
+dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
+  head(10) %>%
+  as.tibble()
+
+```
+
+# Tidy-way: dplyr -> SQL
+
+One of the recent developments in the tidyverse. Working with a database using the `dplyr` syntax.  
+
+These examples are from [the vignette](https://cran.r-project.org/web/packages/dbplyr/vignettes/translation-verb.html) of the `dbplyr` package.
+
+```{r}
+
+# tbl select tables 
+flights <- con %>% tbl("flights")
+airports <- con %>% tbl("airports")
+
+```
+
+## `select` = `SELECT`
+
+```{r}
+
+# Set to dplyr
+conflict_prefer("filter", "dplyr")
+
+flights %>% 
+  select(contains("delay")) %>%
+  show_query()
+
+```
+
+## `mutate` = `SELECT` `AS`
+
+```{r}
+
+flights %>%
+  select(distance, air_time) %>%  
+  mutate(speed = distance / (air_time / 60)) %>%
+  show_query()
+
+```
+
+## `filter` = `WHERE` 
+
+```{r}
+
+flights %>% 
+  filter(month == 1, day == 1) %>%
+  show_query()
+
+```
+
+- Note that R and SQL operators are not exactly alike. R uses `!=` for `Not equal to`. SQL uses `<>` or `!=`. Also, some of SQL comparison operators are more intuitive than their R counterparts (`WHERE student_ID BETWEEN 1 and 100` `WHERE first_name LIKE 'Jae'`).
+
+## `arrange` = `ORDER BY`
+
+```{r}
+
+flights %>% 
+  arrange(carrier, desc(arr_delay)) %>%
+  show_query()
+
+```
+
+## `summarise` = `SELECT` `AS` and `group by` = `GROUP BY`
+
+```{r}
+
+flights %>%
+  group_by(month, day) %>%
+  summarise(delay = mean(dep_delay)) %>%
+  show_query()
+
+```
+
+## Data visualization
+
+This part is from [RStudio's DB best practices](https://db.rstudio.com/best-practices/visualization/).
+
+- A typical ggplot2 
+
+```{r}
+
+ggplot(flights) +
+  geom_bar(aes(x = origin), stat = "count")
+
+```
+
+- Best practice: transforming data -> plotting results in R
+
+* `collect()` is used to pull the data. Depending on the data size, it may take a long time to run.
+
+```{r}
+
+df <- flights %>%
+  group_by(origin) %>%
+  tally() %>%
+  collect()
+
+# Shifted from geom_bar() to geom_col() because the heights of bar plots were calculated by tally()
+
+ggplot(df) +
+  geom_col(aes(x = origin, y = n))
+
+```
+
+# SQL-way: SQL -> dplyr
+
+`sqldf` has ben used to use SQL code in R. `tidyquery` is a good alternative because it has fewer dependencies.
+
+## `select` = `SELECT`
+
+```{r}
+
+# Now switch to dbplyr 
+conflict_prefer("sql", "dbplyr")
+
+# sqldf 
+
+con %>% tbl(sql("SELECT dep_delay, arr_delay FROM flights"))
+
+# tidyquery 
+
+query("SELECT dep_delay, arr_delay FROM flights")
+
+# In case, if you want to translate the SQL code into tidyverse, then try the following code:
+# parse_query("SELECT dep_delay, arr_delay FROM flights", tidyverse = TRUE)
+
+```
+
+## `mutate` = `SELECT` `AS`
+
+Also, note that you can combine `sqldf` and `dplyr`.
+
+```{r}
+
+# sqldf
+con %>% tbl(sql("SELECT distance, air_time, distance / air_time / 60.0 AS speed
+FROM flights")) %>%
+  arrange(desc(air_time))
+
+```
+
+## `filter` = `WHERE` 
+
+```{r}
+
+con %>% tbl(sql("
+SELECT *
+FROM flights
+WHERE month = 1.0 AND day = 1.0
+"))
+
+```
+
+## `arrange` = `ORDER BY`
+
+```{r}
+
+con %>% tbl(sql("
+SELECT *
+FROM flights
+ORDER BY carrier, arr_delay DESC
+"))
+
+```
+
+## `summarise` = `SELECT` `AS` and `group by` = `GROUP BY`
+
+```{r}
+
+con %>% tbl(sql("
+SELECT month, day, AVG(dep_delay) AS delay
+FROM flights
+GROUP BY month, day
+"))
+
+```
+
+# What we can't do
+
+Check out the issue section of [`queryparser`](https://github.com/ianmcook/queryparser) and that of [`tidyquery`](https://github.com/ianmcook/tidyquery/issues) to see the latest developments.
+
+**Limitations**
+
+    - Subqueries 
+    - Unions 
+    - Implict join notation 
+    - Joins of three plus tables 
+    - WITH clause 
+    - OVER expressions 
+    - Non-ASCII characters in queries
+
+**Non-Goals**
+
+    - Translate other types of SQL statements (such as `INSERT` or `UPDATE`) and other more complex tasks (e.g., efficient process large batches of queries)
+  
+# References 
+
+- R Studio, [Database using R](https://db.rstudio.com/)
+- Ian Cook, ["Bridging the Gap between SQL and R"](https://github.com/ianmcook/rstudioconf2020/blob/master/bridging_the_gap_between_sql_and_r.pdf) rstudio::conf 2020 slides
+- Data Carpentry contributors, [SQL database and R](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html), Data Carpentry, September 10, 2019.
+- [Introduction to dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html)
+- Benjamin S. Baumer, Daniel T. Kaplan, and Nicholas J. Horton, [Moden Data Science with R, 2nd ed.](https://beanumber.github.io/mdsr2e/), CRC Press, 2020-01-03.
+- Josh Erickson, [SQL in R](http://dept.stat.lsa.umich.edu/~jerrick/courses/stat701/notes/sql.html), STAT 701, University of Michigan
+- [Deborah Nolan](https://www.stat.berkeley.edu/~nolan/), [STAT 133 class notes](https://www.stat.berkeley.edu/~nolan/stat133/Fall05/lectures/), University of California, Berkeley, Fall 2005
+- [Kane, Michael J](https://medicine.yale.edu/profile/michael_kane/), "Strategies for Exploring a 12 Gigabyte Data Set: Airline Flight Delays," Invited book chapter in Data Science in R: A Case Studies Approach to Computational Reasoning and Problem Solving, 2015.
+- Kane, Michael J., John Emerson, and Stephen Weston. ["Scalable strategies for computing with massive data."](http://www.stat.yale.edu/~jay/EmersonMaterials/ScalableStrategies.pdf) Journal of Statistical Software 55.14 (2013): 1-19.
+- Eduardo Arino de la Rubia, ["Multicore Data Science with R and Python"](https://blog.dominodatalab.com/multicore-data-science-r-python/), Domino Data Lab, May 22, 2017.
