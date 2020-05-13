@@ -2,13 +2,13 @@
 title: "SQL for R Users"
 author: "Jae Yeon Kim"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     df_print: paged
     number_sections: yes
     toc: yes
     toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
 ```{r, echo=FALSE}
@@ -91,20 +91,20 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
  tidyverse, # tidyverse packages 
  conflicted, # an alternative conflict resolution strategy
- pyrr, # for inspecting memory allocations 
  dbplyr, # to use database with dplyr 
  DBI, # for using SQL queries
  RSQLite, # for SQLite
  odbc, # backend engine; open data connectivity driver
  RPostgres, # PostgreSQL
- sqldf, # for running SQL in R
+ glue, # for gluing strings to data
  tidyquery, # sqldf alternative 
  nycflights13 # for test data 
 )
 
-# Resoving conflicting functions 
+# Resolving conflicting functions 
 conflict_prefer("filter", "dplyr")
 conflict_prefer("sql", "dplyr")
+
 ```
 
 # Data sets 
@@ -289,37 +289,26 @@ ggplot(df) +
 
 # SQL-way: SQL -> dplyr
 
-`sqldf` has ben used to use SQL code in R. `tidyquery` is a good alternative because it has fewer dependencies.
+Remember the `dbGetQuery()` function from `DBI` package?
 
 ## `select` = `SELECT`
 
 ```{r}
 
-# Now switch to dbplyr 
-conflict_prefer("sql", "dbplyr")
-
-# sqldf 
-
-con %>% tbl(sql("SELECT dep_delay, arr_delay FROM flights"))
-
-# tidyquery 
-
-query("SELECT dep_delay, arr_delay FROM flights")
-
-# In case, if you want to translate the SQL code into tidyverse, then try the following code:
-# parse_query("SELECT dep_delay, arr_delay FROM flights", tidyverse = TRUE)
+dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights")
 
 ```
 
 ## `mutate` = `SELECT` `AS`
 
-Also, note that you can combine `sqldf` and `dplyr`.
+Also, note that you can combine functions from `DBI` and `dplyr`.
 
 ```{r}
 
-# sqldf
-con %>% tbl(sql("SELECT distance, air_time, distance / air_time / 60.0 AS speed
-FROM flights")) %>%
+  # DBI
+dbGetQuery(con, "SELECT distance, air_time, distance / air_time / 60.0 AS speed
+FROM flights") %>%
+  # dplyr
   arrange(desc(air_time))
 
 ```
@@ -328,11 +317,11 @@ FROM flights")) %>%
 
 ```{r}
 
-con %>% tbl(sql("
+dbGetQuery(con, "
 SELECT *
 FROM flights
 WHERE month = 1.0 AND day = 1.0
-"))
+")
 
 ```
 
@@ -340,11 +329,11 @@ WHERE month = 1.0 AND day = 1.0
 
 ```{r}
 
-con %>% tbl(sql("
+dbGetQuery(con, "
 SELECT *
 FROM flights
 ORDER BY carrier, arr_delay DESC
-"))
+")
 
 ```
 
@@ -352,11 +341,11 @@ ORDER BY carrier, arr_delay DESC
 
 ```{r}
 
-con %>% tbl(sql("
+dbGetQuery(con, "
 SELECT month, day, AVG(dep_delay) AS delay
 FROM flights
 GROUP BY month, day
-"))
+")
 
 ```
 
