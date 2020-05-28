@@ -1,3 +1,9 @@
-# sql-for-r-tidyverse-users
+# SQL for R Users
 
-This workshop is designed for intermediate R users who want to get started with SQL.
+by Jae Yeon Kim
+
+## Overview
+
+## Learning objectives
+
+![](https://i.creativecommons.org/l/by/4.0/88x31.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
