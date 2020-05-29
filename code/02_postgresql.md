@@ -4,7 +4,7 @@ Jae Yeon Kim
 
 The first sequence of the workshop covered accessing a databae and doing basic data exploration using `dbplyr` and `dplyr` in R. For a more serious work on database, it is necessary to go deeper into the understanding of how database and SQL work. `dplyr` is optimzed to handle the small and medium-sized data analysis tasks.
 
-In this workshop, we learn basic skills to use [PostgreSQL](https://www.postgresql.org/), one of the advanced open source relational database management tools, for database management. This workshop heavily draws on [PostgreSQL: Up and Running, A Practical Guide to the Advanced Open Source Database](http://shop.oreilly.com/product/0636920052715.do) by Regina Obe and Leo Hsu (O'Reilly Media 2017) and [PostgreSQL Tutotiral](https://www.postgresqltutorial.com/what-is-postgresql/) website.
+In this workshop, we learn basic skills to use [PostgreSQL](https://www.postgresql.org/), one of the advanced open source relational database management tools, for database management. This workshop heavily draws on [PostgreSQL: Up and Running, A Practical Guide to the Advanced Open Source Database](http://shop.oreilly.com/product/0636920052715.do) by Regina Obe and Leo Hsu (O'Reilly Media 2017) and [PostgreSQL Tutorial](https://www.postgresqltutorial.com/what-is-postgresql/) website.
 
 ![](http://db.cs.berkeley.edu/www/database.gif)
 
@@ -15,7 +15,7 @@ In this workshop, we learn basic skills to use [PostgreSQL](https://www.postgres
 3. Fast
 4. Compatible with many languages (e.g., C, SQL, R, Python)
 5. Smart. PostgreSQL helps to use databases as a platform to run data-intensive applications.
-6. Developed by Berkeley computer science researchers ([POSTGRES 4.2](https://dsf.berkeley.edu/postgres.html))
+6. Developed by Berkeley computer science researchers ([POSTGRES 4.2](https://dsf.berkeley.edu/postgres.html)) :heart:
 
 **Why not?**
 
@@ -73,13 +73,15 @@ create database oskidb;
 
 ### Add a new user
 
+- Create a user
+
 ```bash
 
 ## Create a user and associated password
 create user oski with encrypted password 'oskipw';
 ```
 
-Define the privileges (or permissions) of the new user: `GRANT`
+- Define the privileges (or permissions) of the new user: `GRANT`
 
 ```bash
 ## Grant privileges
@@ -94,28 +96,60 @@ Reference: https://www.digitalocean.com/community/tutorials/how-to-create-remove
 
 ### Add a new table
 
-Check available tables by typing `dt`.
+We can't ignore tables as they are building blocks of a relational database. Check available tables by typing `dt`.
 
-Here's an example of how you create a table.
+Here's an example of how you create a table. PostgreSQL supports the fundamental data types (i.e., numerics, strings, dates, times, and booleans) plus more (e.g., [JSON](https://www.json.org/json-en.html), [XML](https://en.wikipedia.org/wiki/XML)).
+
+**Data types**
+
+Note that this list is not exhaustive.
+
+- Numerics (e.g., integers, decimals, floating-point numbers)
+	- SERIAL: auto-incrementing integers (useful to create keys)
+- Textuals
+	- CHAR: character (values stored in fixed length, e.g., ZIP CODE)
+	- VARCHAR: character varying. (values stored in varying length)
+	- TEXT: generic textual data type
+- Temporals (e.g., date, time, timestamp, timestamptz (time stamp + time zone). etc.)
+
+
+**Basic syntax**
+
+- Create a table
+
+```
+CREATE TABLE table_name ( # Name of the table
+	field_name data_type constraint_name # Name of the column + The variable type of the column + optional constraint
+	);
+```
 
 ```bash
 CREATE TABLE sql_workshop(
 	student_id serial PRIMARY KEY,
 	student_name VARCHAR (50) UNIQUE NOT NULL,
 	affiliations VARCHAR (50),
-	comments TEXT
+	comments TEXT # A string; length is not determined
+	log_ts TIMESTAMP
 );
 ```
 
-Alter a table: `ALTER TABLE`
-
-Insert a row: `INSERT INTO`
-
-Let's drop a table: `DROP TABLE`
+- Alter a table: `ALTER TABLE [TABLE NAME] [ACTION]`
 
 ```bash
+ALTER TABLE sql_workshop ADD COLUMN
+program_year varchar(25);
+```
 
-SELECT * FROM TABLE NAME;
+- Insert a row: `INSERT INTO [COLUMN NAME] VALUES (a list of values)`
+
+```bash
+INSERT INTO student_name VALUES ("jae", "aniket", "renata", "aaron", "evan", "claudia", "dave");
+```
+
+- Drop a table: `DROP TABLE [TABLE NAME]`
+
+```bash
+DROP TABLE sql_workshop;
 ```
 
 If you want to get to know more about the syntax of a command, then add `\h` before a particular command (`\h CREATE TABLE`).
@@ -151,3 +185,4 @@ The following screent shot helps you to connect to the database you just created
 
 - [PostgreSQL: Up and Running, A Practical Guide to the Advanced Open Source Database](http://shop.oreilly.com/product/0636920052715.do) by Regina Obe and Leo Hsu (O'Reilly Media 2017)
 - [PostgreSQL Tutorial](https://www.postgresqltutorial.com/)
+- [use-the-index-luke.com](https://use-the-index-luke.com/). This is a great resource to learn how to make your SQL query fast.
