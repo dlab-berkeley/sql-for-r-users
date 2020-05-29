@@ -2925,9 +2925,16 @@ if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></p
  glue, # for gluing strings to data
  tidyquery, # sqldf alternative 
  nycflights13 # for test data 
-)
-
-# Resolving conflicting functions 
+)</code></pre>
+<pre><code>## Installing package into &#39;/home/jae/R/x86_64-pc-linux-gnu-library/4.0&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## Warning in utils::install.packages(package, ...): installation of package &#39;odbc&#39;
+## had non-zero exit status</code></pre>
+<pre><code>## 
+## odbc installed</code></pre>
+<pre><code>## Warning in pacman::p_load(tidyverse, conflicted, dbplyr, DBI, RSQLite, odbc, : Failed to install/load:
+## odbc</code></pre>
+<pre class="r"><code># Resolving conflicting functions 
 conflict_prefer(&quot;filter&quot;, &quot;dplyr&quot;)</code></pre>
 <pre><code>## [conflicted] Will prefer dplyr::filter over any other package</code></pre>
 <pre class="r"><code>conflict_prefer(&quot;sql&quot;, &quot;dplyr&quot;)</code></pre>
