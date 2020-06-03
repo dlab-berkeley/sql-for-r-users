@@ -4,13 +4,15 @@ by [Jae Yeon Kim](https://jaeyk.github.io/)
 
 ## Overview
 
-SQL is a must-skill for researchers to work with big data. Anyone working with a data that doesn't fit into their laptop should consider learning this powerful language for a relational database management. This workshop intends to help R users to get started in SQL through `dbplyr`. After laying the foundation, the workshop also introduces intermediate SQL skills through `PostgreSQL`.
+SQL is a viable option for anyone working with a large dataset (>10GB). For this reason, SQL is a must-skill if you intend to work with big data or data-driven organizations. This workshop helps R users to get started in SQL through `dbplyr`. After laying the foundation, the workshop also introduces intermediate SQL skills through `PostgreSQL`. Then the workshop offers a hands-on exercise where you can put the skills you learned together.
 
 ## Learning objectives
 
 - [Part 1](https://github.com/jaeyk/sql-for-r-users/blob/master/code/01_intro_to_sql.Rmd): Learn how to access a database and run exploratory data analysis using `dbplyr` in R
 
 - [Part 2](https://github.com/jaeyk/sql-for-r-users/blob/master/code/02_postgresql.md): Learn how to manage a database using `PostgreSQL`
+
+- Bonus track : Putting what you have learned from part 1 and part 2 in practice ([shell script](https://github.com/jaeyk/sql-for-r-users/blob/master/code/02_sql_practice.sh), [R markdown](https://github.com/jaeyk/sql-for-r-users/blob/master/code/04_r_databsae_query.Rmd))
 
 ## Setup
 
