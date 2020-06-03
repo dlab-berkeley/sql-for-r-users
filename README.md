@@ -4,7 +4,7 @@ by [Jae Yeon Kim](https://jaeyk.github.io/)
 
 ## Overview
 
-SQL is a viable option for anyone working with a large dataset (>10GB). For this reason, SQL is a must-skill if you intend to work with big data or data-driven organizations. This workshop helps R users to get started in SQL through `dbplyr`. After laying the foundation, the workshop also introduces intermediate SQL skills through `PostgreSQL`. Then the workshop offers a hands-on exercise where you can put the skills you learned together.
+SQL is a viable option for anyone working with a large dataset (>10GB). For this reason, SQL is a must-skill if you intend to work with big data or data-driven organizations. This workshop helps R users to get started in SQL through `dbplyr`. After laying the foundation, the workshop also introduces intermediate SQL skills through `PostgreSQL`. Then the workshop offers a hands-on exercise where you can put your newly learned skills into practice. The workshop expects basic familiarity with R `dplyr` package, but does not require any background knowledge in SQL.
 
 ## Learning objectives
 
