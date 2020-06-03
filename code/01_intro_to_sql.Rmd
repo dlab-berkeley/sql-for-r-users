@@ -95,8 +95,6 @@ pacman::p_load(
  DBI, # for using SQL queries
  RSQLite, # for SQLite
  odbc, # backend engine; open data connectivity driver
- RPostgres, # PostgreSQL
- glue, # for gluing strings to data
  tidyquery, # sqldf alternative 
  nycflights13 # for test data 
 )
@@ -149,6 +147,8 @@ copy_to(dest = con, # remote data source
 # Note that we didn't load the data.
 
 src_dbi(con)
+
+library(tidyverse)
 
 ```
 

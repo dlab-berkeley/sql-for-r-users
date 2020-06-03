@@ -2,7 +2,7 @@
 
 Jae Yeon Kim
 
-The first sequence of the workshop covered accessing a databae and doing basic data exploration using `dbplyr` and `dplyr` in R. For a more serious work on database, it is necessary to go deeper into the understanding of how database and SQL work. `dplyr` is optimzed to handle the small and medium-sized data analysis tasks.
+The first sequence of the workshop covered accessing a databae and doing basic data exploration using `dbplyr` and `dplyr` in R. For a more serious work on database, it is necessary to go deeper into the understanding of how database and SQL work. At the fundamental level, a database does two things: storing and retrieving data. As we have learned how to retrieve data, we also need to learn how to store data.
 
 In this workshop, we learn basic skills to use [PostgreSQL](https://www.postgresql.org/), one of the advanced open source relational database management tools, for database management. This workshop heavily draws on [PostgreSQL: Up and Running, A Practical Guide to the Advanced Open Source Database](http://shop.oreilly.com/product/0636920052715.do) by Regina Obe and Leo Hsu (O'Reilly Media 2017) and [PostgreSQL Tutorial](https://www.postgresqltutorial.com/what-is-postgresql/) website.
 
@@ -117,13 +117,13 @@ Note that this list is not exhaustive.
 
 - Create a table
 
-```
+```sql
 CREATE TABLE table_name ( # Name of the table
-	field_name data_type constraint_name # Name of the column + The variable type of the column + optional constraint
+	field_name data_type constraint # Name of the column + The variable type of the column + optional constraint
 	);
 ```
 
-```bash
+```sql
 CREATE TABLE sql_workshop(
 	student_id serial PRIMARY KEY,
 	student_name VARCHAR (50) UNIQUE NOT NULL,
@@ -135,20 +135,27 @@ CREATE TABLE sql_workshop(
 
 - Alter a table: `ALTER TABLE [TABLE NAME] [ACTION]`
 
-```bash
+```sql
 ALTER TABLE sql_workshop ADD COLUMN
 program_year varchar(25);
 ```
 
 - Insert a row: `INSERT INTO [COLUMN NAME] VALUES (a list of values)`
 
-```bash
+```sql
 INSERT INTO student_name VALUES ("jae", "aniket", "renata", "aaron", "evan", "claudia", "dave");
+```
+
+Hypothetically, you have your data saved in a CSV format in your computer. You can copy and the csv file to the table.
+
+```sql
+
+COPY sql_workshop FROM `file name address` DELIMITER `,` CSV HEADER;
 ```
 
 - Drop a table: `DROP TABLE [TABLE NAME]`
 
-```bash
+```sql
 DROP TABLE sql_workshop;
 ```
 
@@ -185,4 +192,5 @@ The following screent shot helps you to connect to the database you just created
 
 - [PostgreSQL: Up and Running, A Practical Guide to the Advanced Open Source Database](http://shop.oreilly.com/product/0636920052715.do) by Regina Obe and Leo Hsu (O'Reilly Media 2017)
 - [PostgreSQL Tutorial](https://www.postgresqltutorial.com/)
-- [use-the-index-luke.com](https://use-the-index-luke.com/). This is a great resource to learn how to make your SQL query fast.
+- [Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/dp/B06XPJML5D/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1) by Martin Kleppmann (O'Reilly Media 2017). A highly recommendable book for learning more about data engineering.
+- [use-the-index-luke.com](https://use-the-index-luke.com/). This is a great resource to learn how to make your SQL query efficient.
