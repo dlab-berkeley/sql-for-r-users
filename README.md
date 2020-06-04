@@ -1,3 +1,5 @@
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaeyk/sql-for-r-users/master)
+
 # SQL for R Users
 
 by [Jae Yeon Kim](https://jaeyk.github.io/)
