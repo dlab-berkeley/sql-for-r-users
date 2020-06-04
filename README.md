@@ -14,7 +14,7 @@ SQL is a viable option for anyone working with a large dataset (>10GB). For this
 
 - [Part 2](https://github.com/jaeyk/sql-for-r-users/blob/master/code/02_postgresql.md): Learn how to manage a database using `PostgreSQL`
 
-- Bonus track : Putting what you have learned from part 1 and part 2 in practice ([shell script](https://github.com/jaeyk/sql-for-r-users/blob/master/code/02_sql_practice.sh), [R markdown](https://github.com/jaeyk/sql-for-r-users/blob/master/code/04_r_databsae_query.Rmd))
+- Bonus track : Putting what you have learned from part 1 and part 2 in practice ([shell script](https://github.com/jaeyk/sql-for-r-users/blob/master/code/03_copy_csv_to_database.sh), [R markdown](https://github.com/jaeyk/sql-for-r-users/blob/master/code/04_r_databsae_query.Rmd))
 
 ## Setup
 
