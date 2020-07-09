@@ -116,7 +116,7 @@ pacman::p_load(
  dbplyr, # to use database with dplyr 
  DBI, # for using SQL queries
  RSQLite, # for SQLite
- odbc, # backend engine; open data connectivity driver
+# odbc, # backend engine; open data connectivity driver
  tidyquery, # sqldf alternative 
  nycflights13 # for test data 
 )
