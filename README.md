@@ -17,8 +17,6 @@ SQL is a viable option for anyone working with a large dataset (>10GB). For this
 
 - [Part 2](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/02_postgresql.md): Learn how to manage a database using `PostgreSQL`
 
-- I used Aaron's Git repository on [binder-postgres](https://github.com/aculich/binder-postgres) to make the second part self-contained. 
-
 - Bonus track : Putting what you have learned from part 1 and part 2 in practice ([shell script](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/03_copy_csv_to_database.sh), [R markdown](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/04_r_databsae_query.Rmd))
 
 ## Setup
@@ -60,7 +58,9 @@ sudo apt update
 sudo apt install postgresql postgresql-contrib
 ```
 
-If you use different operation systems (e.g., Windows and Mac), then take a look at [this official platform-specific guideline for installation](https://www.postgresql.org/docs/9.3/installation.html) documented by postgresql.org.
+- I used Aaron's Git repository on [binder-postgres](https://github.com/aculich/binder-postgres) to make the second part self-contained. 
+
+- If you use different operation systems (e.g., Windows and Mac), then take a look at [this official platform-specific guideline for installation](https://www.postgresql.org/docs/9.3/installation.html) documented by postgresql.org.
 
 * Special thanks to Jacob Coblnetz (@Jacob_Coblnetz) for sharing his slides on the SQL workshop used at MIT and Aaron Culich at D-Lab at UC Berkeley for providing constructive feedback.
 
