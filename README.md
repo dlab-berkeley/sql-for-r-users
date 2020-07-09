@@ -1,4 +1,5 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaeyk/sql-for-r-users/master?urlpath=rstudio) (RStudio, for Part 1)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jaeyk/sql-for-r-users/master) (Jupyter notebook, for Part 2)
 
 # SQL for R Users
 
