@@ -1,0 +1,23 @@
+#!/bin/bash
+set -eux
+
+#Create a directory for the database files
+PGDATA=${PGDATA:-$CONDA_DIR/pgsql}
+if [ ! -d "$PGDATA" ]; then
+  initdb -D "$PGDATA" --auth-host=md5 --encoding=UTF8
+fi
+
+#Start the postgres server
+pg_ctl -D "$PGDATA" -l "$PGDATA/pg.log" start
+
+#Copy the initialisation files into the final container
+mv init_db $CONDA_DIR/
+chmod +x $CONDA_DIR/init_db/postgres/init_db.sh
+$CONDA_DIR/init_db/postgres/init_db.sh
+
+#Put an equivalent of the above in a config file: init_db.sql
+#psql -U postgres postgres -f init_db.sql
+#psql test < seed_db.sql
+
+#Shut down the postgres server to prevent locks from a dirty shutdown
+pg_ctl -D "$PGDATA" -l "$PGDATA/pg.log" stop

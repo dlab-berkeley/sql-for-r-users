@@ -1,0 +1,10 @@
+name: postgres-example
+channels:
+  - defaults
+dependencies:
+  - postgresql
+  - psycopg2
+  - pip
+  - pip:
+    - pandas
+    - git+https://github.com/catherinedevlin/ipython-sql.git

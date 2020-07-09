@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eux
+
+PGDATA=${PGDATA:-$CONDA_DIR/pgsql}
+pg_ctl -D "$PGDATA" -l "$PGDATA/pg.log" start
+
+exec "$@"
