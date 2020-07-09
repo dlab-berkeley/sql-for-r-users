@@ -17,6 +17,8 @@ SQL is a viable option for anyone working with a large dataset (>10GB). For this
 
 - [Part 2](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/02_postgresql.md): Learn how to manage a database using `PostgreSQL`
 
+- I used Aaron's Git repository on [binder-postgres](https://github.com/aculich/binder-postgres) to make the second part self-contained. 
+
 - Bonus track : Putting what you have learned from part 1 and part 2 in practice ([shell script](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/03_copy_csv_to_database.sh), [R markdown](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/04_r_databsae_query.Rmd))
 
 ## Setup
