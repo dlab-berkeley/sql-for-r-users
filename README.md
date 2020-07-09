@@ -21,6 +21,8 @@ SQL is a viable option for anyone working with a large dataset (>10GB). For this
 
 ## Setup
 
+Recommended: Launch the binders above. Please do it before attending the worskshop as it takes a while (especially, if you do it for the first time).
+
 **For Part 1**
 
 - `pacman::p_load()` reduces steps for installing and loading several packages simultaneously.
