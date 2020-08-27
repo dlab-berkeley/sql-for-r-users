@@ -11,7 +11,7 @@ SQL is a viable option for anyone working with a large dataset (not loadable int
 
 ## Learning objectives
 
-- Learn how to access a database and run exploratory data analysis using `dbplyr` in R [R markdown](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/01_intro_to_sql.Rmd)
+- Learn how to access a database and run exploratory data analysis using `dbplyr` in R [[R markdown](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/01_intro_to_sql.Rmd)]
 
 ## Prerequisites 
 
