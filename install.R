@@ -1,10 +1,8 @@
 install.packages(c("pacman",
                    "tidyverse",
-                    "dbplyr",
-                    "DBI",
-                    "RSQLite",
-                    "odbc",
-                    "RPostgres",
-                    "glue",
-                    "tidyquery",
-                    "nycflights13")) 
+                   "dbplyr",
+                   "DBI",
+                   "RSQLite",
+                   "RPostgres",
+                   "tidyquery",
+                   "nycflights13")) 

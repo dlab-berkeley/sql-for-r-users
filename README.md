@@ -1,5 +1,5 @@
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master?urlpath=rstudio)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master)
 
 # SQL for R Users
 
@@ -7,7 +7,7 @@ by [Jae Yeon Kim](https://jaeyk.github.io/)
 
 ## Overview
 
-SQL is a viable option for anyone working with a large dataset (not loadable into R). For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop demonstrates that SQL is easy to learn, if you already know how to use `dplyr` package in R. 
+SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop demonstrates that SQL is easy to learn, if you already know how to use `dplyr` package in R. 
 
 ## Learning objectives
 

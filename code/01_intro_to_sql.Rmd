@@ -17,17 +17,16 @@ output:
 
 > Techniques to deal with big data 
 
-- Medium sized file (still loadable but slow in processing in R)
+- Medium sized file (loadable but slow in processing in R)
    - Try to reduce the size of the file using slicing and dicing
-   - Tools: 
-   `data.table::fread(file path, select = c("column 1", "column 2"))` imports data faster than `read.csv()`
+   - Tools: One option is using `data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does.
     
 - Large file (not loadable in R)
-   - A
+   - Put the data into a database and **ACCESS** it 
+   - Explore the data and pull the outputs of interest 
+   - Tools: SQL is a staple tool to define and **query** (focus of the workshop today) a relational database (= a collection of tables).
      
-- SQL: Extracting data from a database. SQL is a staple tool in the non-academic world to perform this task. Key idea: Local dataframe -> Database. The focus of today's workshop 
-     
-![Database example. Source: MySQL Tutorial](https://sp.mysqltutorial.org/wp-content/uploads/2009/12/MySQL-Sample-Database-Schema.png)
+![Relational Database. Source: MySQL Tutorial](https://sp.mysqltutorial.org/wp-content/uploads/2009/12/MySQL-Sample-Database-Schema.png)
 
 # What is SQL? 
 
@@ -43,7 +42,7 @@ output:
 
 # Learning objectives 
 
-> * Embracing a new mindset: from ownership (opening CSVs in your laptop) to access (accessing data stored in the database)
+> * Embracing a new mindset: shifting from ownership (opening CSVs in your laptop) to access (accessing data stored in the database)
 
 > * Learning how to access and query a database in R in a tidy way 
 
@@ -86,8 +85,6 @@ Notice the difference between `dplyr` and `SQL`?
 
 ```{r}
 
-rm(list = ls())
-
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
  tidyverse, # tidyverse packages 
@@ -95,8 +92,7 @@ pacman::p_load(
  dbplyr, # to use database with dplyr 
  DBI, # for using SQL queries
  RSQLite, # for SQLite
-# odbc, # backend engine; open data connectivity driver
- tidyquery, # sqldf alternative 
+ tidyquery, # sqldf alternative
  nycflights13 # for test data 
 )
 
