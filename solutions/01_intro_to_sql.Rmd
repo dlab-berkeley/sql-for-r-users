@@ -1,0 +1,65 @@
+---
+title: "SQL for R Users"
+author: "Jae Yeon Kim"
+output:
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+**Challenge 1** 
+
+- R: data 
+- SQL: select 
+
+**Challenge 2**
+
+```r
+dbGetQuery(con, 
+           "SELECT * 
+            FROM flights 
+            LIMIT 10;") 
+```
+
+**Challenge 3**
+
+```r
+dbListFields(con, "flights")
+```
+
+**Challenge 4**
+
+```sql
+SELECT `dep_delay`, `arr_delay`
+FROM `flights`
+```
+**Challenge 5**
+
+```sql
+SELECT `distance`, `air_time`, `distance` / (`air_time` / 60.0) AS `speed`
+FROM `flights`
+```
+
+**Challenge 6**
+```sql
+SELECT *
+FROM `flights`
+WHERE ((`month` = 1.0) AND (`day` = 1.0))
+```
+
+**Challenge 7**
+```sql
+SELECT *
+FROM `flights`
+ORDER BY `carrier`, `arr_delay` DESC
+
+**Challenge 8**
+```sql
+SELECT `month`, `day`, AVG(`dep_delay`) AS `delay`
+FROM `flights`
+GROUP BY `month`, `day`
+```
