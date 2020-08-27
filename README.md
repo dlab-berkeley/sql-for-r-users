@@ -33,8 +33,6 @@ pacman::p_load(
     dbplyr, # database with dplyr
     DBI, # SQL queries
     RSQLite, # SQLite
-    RPostgres, # PostgreSQL
-    tidyquery, # sqldf alternative
     nycflights13 # toy data
 )
 

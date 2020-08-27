@@ -123,7 +123,6 @@ pacman::p_load(
  RSQLite, # SQLite
  
  dbplyr, # use database with dplyr 
- tidyquery, # sqldf alternative
  
  nycflights13 # toy data 
 )
