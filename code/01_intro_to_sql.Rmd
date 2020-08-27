@@ -66,7 +66,7 @@ ORDER BY      | arrange()
 LIMIT         | head()
   
 **Challenge 1**
-1. Can you tell me the difference in the order the following `R` and `SQL` code were written to wrangle data? For instance, in R, what command comes first? In contrast, in SQL, what command comes first?
+1. Can you tell me the difference in the order in which the following `R` and `SQL` code were written to wrangle data? For instance, in R, what command comes first? In contrast, in SQL, what command comes first?
 
 - R example 
 
