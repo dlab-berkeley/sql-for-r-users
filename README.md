@@ -7,11 +7,11 @@ by [Jae Yeon Kim](https://jaeyk.github.io/)
 
 ## Overview
 
-SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop aims to demonstrate that SQL is easy to learn, if you already know how to use `dplyr` package in R. 
+SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop aims to demonstrate that SQL is easy to learn, if you already know how to use `dplyr` package in R. This will be a very hands-on workshop, with live coding. 
 
 ## Learning objectives
 
-- Learn how to access a database and run exploratory data analysis using `dbplyr` in R [[R markdown](https://github.com/dlab-berkeley/sql-for-r-users/blob/master/code/01_intro_to_sql.Rmd)]
+- Learning how to use R and SQL to access and query a database
 
 ## Prerequisites 
 
@@ -26,8 +26,6 @@ Launch the binder. Please do so before attending the worskshop as it takes a whi
 Or manually install the following packages.
 
 ```r
-
-rm(list = ls())
 
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(

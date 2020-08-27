@@ -15,17 +15,23 @@ output:
 
 # Motivation
 
-> Techniques to deal with big data 
+**Techniques to deal with big data**
 
-- Medium sized file (loadable but slow in processing in R)
+- R reads data into random-access memory (RAM) at once and this object lives in memory entirely. So, object > memory will crash R. 
+- So, the key to deal with big data in R is reducing the size of data you want to bring into R.
+- Medium sized file (1-2 GB)
    - Try to reduce the size of the file using slicing and dicing
-   - Tools: One option is using `data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does.
-    
-- Large file (not loadable in R)
+   - Tools: 
+      - R:`data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does.
+      - Commnad line: [`csvkit`](https://csvkit.readthedocs.io/en/latest/) - a suite of command-line tools to and working with CSV 
+- Large file (> 2-10 GB)
    - Put the data into a database and **ACCESS** it 
    - Explore the data and pull the outputs of interest 
-   - Tools: SQL is a staple tool to define and **query** (focus of the workshop today) a relational database (= a collection of tables).
+   - Tools
+      - Relational database = a collection of tables (fixed columns and rows): SQL is a staple tool to define and **query** (focus of the workshop today) this type of database
+      - Non-relational database = a collection of documents (MongoDB), key-values (Redis and DyanoDB), wide-column stores (Cassandra and HBase), or graph (Neo4j and JanusGraph). This type of database does not preclude SQL. Note that NoSQL stands for ["not only SQL."](https://www.mongodb.com/nosql-explained)
      
+**Relational database**
 ![Relational Database. Source: MySQL Tutorial](https://sp.mysqltutorial.org/wp-content/uploads/2009/12/MySQL-Sample-Database-Schema.png)
 
 # What is SQL? 
@@ -34,17 +40,18 @@ output:
 
 - Remains the standard language for a relational database management system.
 
-- It's a DECLARATIVE language ([compute what you want to compute not how to compute it](https://www.sqlite.org/queryplanner.html))
+- It's a DECLARATIVE language ([what to do > how to do](https://www.sqlite.org/queryplanner.html))
+  - Database management systems figurs optimal way to execute query (query optimization)
     
-- Its main job is to define and query databases (i.e., two-dimensional tables). 
-    
-- Great for keeping data type integrity, updating data frequently, joining different data sources, and doing quick data analyses 
+```sql
+SELECT COLUMN FROM TABLE 
+```
 
 # Learning objectives 
 
-> * Embracing a new mindset: shifting from ownership (opening CSVs in your laptop) to access (accessing data stored in the database)
+> * Embracing a new mindset: shifting from ownership (opening CSVs in your laptop) to access (accessing data stored in a database)
 
-> * Learning how to access and query a database in R in a tidy way 
+> * Learning how to use R and SQL to access and query a database
 
 * SQL and R
 
@@ -54,67 +61,121 @@ SELECT        | select() for columns, mutate() for expressions, summarise() for 
 FROM          | which data frame 
 WHERE         | filter()
 GROUP BY      | group_by()
-HAVING        | filter() after group_by()
+HAVING        | filter() **after group_by()**
 ORDER BY      | arrange()
 LIMIT         | head()
-    
-Notice the difference between `dplyr` and `SQL`? 
-
-- `dplyr` works like this: 
-
-  `data` %>% 
-  `select(column)` %>% 
-  `filter(condition)` %>% 
-  `group_by(column)` %>% 
-  `summarise(aggregation (e.g., sum()))` %>%
-  `filter(condition)` %>%
-  `order_by()`
-
-- `SQL` works like this: 
-
-  `SELECT column, aggregation (e.g., count(*))`
-  `FROM data`
-  `WHERE condition`
-  `GROUP BY column`
-  `HAVING condition` 
-  `ORDER BY column` 
   
-# Setup
+**Challenge 1**
+1. Can you tell me the difference in the order the following `R` and `SQL` code were written to wrangle data? For instance, in R, what command comes first? In contrast, in SQL, what command comes first?
 
-- `pacman::p_load()` reduces steps for installing and loading several packages simultaneously. 
+- R example 
 
-```{r}
+```r
 
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(
- tidyverse, # tidyverse packages 
- conflicted, # an alternative conflict resolution strategy
- dbplyr, # to use database with dplyr 
- DBI, # for using SQL queries
- RSQLite, # for SQLite
- tidyquery, # sqldf alternative
- nycflights13 # for test data 
-)
-
-# Resolving conflicting functions 
-conflict_prefer("filter", "dplyr")
-conflict_prefer("sql", "dplyr")
+data %>% # Data 
+  select() %>% # Column
+  filter() %>% # Row 
+  group_by() %>% # Group by 
+  summarise(n = n()) %>% # Aggregation
+  filter() %>% # Row 
+  order_by() # Arrange 
 
 ```
 
-# Data sets 
+- SQL example 
 
-We use [the flight on-time performance data](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236) from the Bureau of Transpiration Statistics of the U.S. government. The data goes back to 1987 and its size is more than 20 gigabytes. For practice, we only use a small subset of the original data (flight data departing NYC in 2013) provided by RStudio.
+```sql 
 
-## Connect to the database 
+SELECT column, aggregation (count())` # Column
 
-- This part draws heavily on the `dbplyr` package vignette. 
+FROM data # Data 
 
-- The `DBI` package provides a client-side interface that allows `dplyr` to work with databases. DBI is automatically installed when you installed `dbplyr`. However, you need to install a specific backend engine (a tool for communication between R and a database management system) for the database (e.g., `RMariaDB`, `RPostgres`, `RSQLite`, `obdc`, `bigrquery`). In this workshop, we use SQLite because it is the easiest to get started with. Personally, I love PostgreSQL because it's an open-source and also powerful to do [many amazing things](https://www.postgresql.org/docs/current/functions.html) (e.g., text mining, geospatial analysis).
+WHERE condition # Row 
 
-- If you want to connect to the database not manually, you can use the Connections interface in RStudio. 
+GROUP BY column # Group by
 
-- Here's [some information](https://db.rstudio.com/dbi) on the historical background of the package.
+HAVING condition # Row  
+
+ORDER BY column # Arrange 
+
+```
+
+# Setup
+
+Let's get to work. 
+
+## Packages 
+
+- `pacman::p_load()` reduces steps for installing and loading several packages simultaneously. 
+
+```{r include = FALSE}
+
+# pacman 
+if (!require("pacman")) install.packages("pacman")
+
+# The rest of pkgs 
+pacman::p_load(
+ 
+ tidyverse, # tidyverse packages 
+ 
+ DBI, # using SQL queries
+ 
+ RSQLite, # SQLite
+ 
+ dbplyr, # use database with dplyr 
+ tidyquery, # sqldf alternative
+ 
+ nycflights13 # toy data 
+)
+
+```
+
+## Data sets 
+
+- [The flight on-time performance data](https://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236) from the Bureau of Transpiration Statistics of the U.S. government. The data goes back to 1987 and its size is more than 20 gigabytes. For practice, we only use a small subset of the original data (flight data departing NYC in 2013) provided by RStudio.
+
+![](https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png)
+
+# Workflow 
+
+1. Create a database 
+
+- ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Client-server-model.svg/500px-Client-server-model.svg.png)
+
+- Note that server also can be your laptop (called [localhost](https://en.wikipedia.org/wiki/Localhost#:~:text=In%20computer%20networking%2C%20localhost%20is,via%20the%20loopback%20network%20interface.)).
+
+- Short answer: To do so, you need interfaces between R and a database. We use [`RSQLite`](https://github.com/r-dbi/RSQLite) in this tutorial because it's easy to set up. 
+
+- Long answer: The `DBI` package in R provides a client-side interface that allows `dplyr` to work with databases. DBI is automatically installed when you installed `dbplyr`. However, you need to install a specific backend engine (a tool for communication between R and a database management system) for the database (e.g., `RMariaDB`, `RPostgres`, `RSQLite`). In this workshop, we use SQLite because it is the easiest to get started with. Personally, I love PostgreSQL because it's an open-source and also powerful to do [many amazing things](https://www.postgresql.org/docs/current/functions.html) (e.g., text mining, geospatial analysis).
+
+2. Copy a table to the database 
+
+- Option 1: You can create a table and insert rows manually.
+
+```sql
+
+CREATE TABLE students (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(30),
+    birth DATE,
+    gpa FLOAT,
+    grad INT,
+    PRIMARY KEY(id));
+    
+INSERT INTO students(name, birth, gpa, grad)
+      VALUES ('Adam', '2000-08-04', 4.0, 2020);
+
+```
+
+- Option 2: Copy a file (object) to a table in a database using `copy_to`). We are taking this option as it's fast and we focus on querying in this workshop. 
+
+3. Query the table 
+
+- Main focus 
+
+4. Pull the results of interests (**data**) using `collect()`
+
+# Create a database 
 
 ```{r}
 
@@ -123,93 +184,112 @@ We use [the flight on-time performance data](https://www.transtats.bts.gov/DL_Se
 drv <- RSQLite::SQLite()
 
 # Create an empty in-memory database 
-
 con <- DBI::dbConnect(drv, 
                       dbname = ":memory:")
 
+# Connect to an existing database 
 #con <- DBI::dbConnect(RMariaDB::MariaDB(), 
  # host = "database.rstudio.com",
  # user = "hadley",
  # password = rstudioapi::askForPassword("Database password")
 #)
 
-# Copy a local data frame to a DBI backend 
-
-copy_to(dest = con, # remote data source
-        df = flights) # a local dataframe 
-
-copy_to(dest = con, # remote data source 
-        df = airports) # a local dataframe 
-
-# Note that we didn't load the data.
-
-src_dbi(con)
-
-library(tidyverse)
-
 ```
 
-Show the list of tables. 
+# Copy an object to a table in the database (push)
 
 ```{r}
 
-# Return the name of the tables
+copy_to(dest = con, 
+        df = flights)
+
+copy_to(dest = con, 
+        df = airports)
+
+copy_to(dest = con,
+        df = planes)
+
+copy_to(dest = con, 
+        df = weather)
+
+```
+
+
+```{r basic information on tables and fields}
+
+# Show two tables in the database 
+
 dbListTables(con)
 
-```
-    
-## Query using dbplyr 
+# Show the columns/attributes/fields of a table 
 
-- The `tbl` object is lazily evaluated; It doesn't pull the data until you explicitly ask for it. 
+dbListFields(con, "flights")
+
+dbListFields(con, "weather")
+
+```
+
+# Quick demonstrations 
+
+- SELECT desired columns 
+- FROM tables 
+
+- Select all columns (*) from `flights` table and show the `first ten rows`
+- Note that you can combine SQL and R commands thanks to `dbplyr`.
 
 ```{r}
 
-# Select all columns from flights table and show the first ten rows 
-
 dbGetQuery(con, "SELECT * FROM flights;") %>%
-  head(10)
+  head(10) 
 
-# Select dep_delay and arr_delay from flights table and show the first ten rows 
+```
 
-dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
-  head(10)
+**Challenge 2** 
+Can you rewrite the above code using `LIMIT` instead of `head(10)`
 
-# Select dep_delay and arr_delay from flights table, show the first ten rows, then turn the result into a tibble.
+- You may notice that using only SQL code makes querying faster.
 
-dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
+- Select dep_delay and arr_delay from flights table, show the first ten rows, then turn the result into a tibble.
+
+**Challenge 3**
+Could you remind me how to see the list of attributes of a table? Let's say you want to see the attributes of `flights` table. 
+
+- Collect the selected columns and filtered rows 
+
+```{r}
+
+df <- dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
   head(10) %>%
-  as.tibble()
+  collect()
 
 ```
   
 # Tidy-way: dplyr -> SQL
 
-One of the recent developments in the tidyverse. Working with a database using the `dplyr` syntax.  
+Thanks to the `dbplyr` package you can use the `dplyr` syntax to query SQL. 
 
-These examples are from [the vignette](https://cran.r-project.org/web/packages/dbplyr/vignettes/translation-verb.html) of the `dbplyr` package.
+- Note that pipe (%) works.
 
 ```{r}
 
-# tbl select tables 
+# tbl select tables
 flights <- con %>% tbl("flights")
 airports <- con %>% tbl("airports")
+planes <- con %>% tbl("planes")
+weather <- con %>% tbl("weather")
 
 ```
 
 ## `select` = `SELECT`
 
-There are also other related commands such as `INSERT/UPDATE/DELETE`, but our focus is `SELECT` given its importance and frequent usage. 
-
 ```{r}
 
-# Set to dplyr
-conflict_prefer("filter", "dplyr")
-
 flights %>% 
-  select(contains("delay")) %>%
-  show_query()
+  select(contains("delay"))
 
 ```
+**Challenge 4** 
+Your turn: write the same code in SQL 
 
 ## `mutate` = `SELECT` `AS`
 
@@ -217,23 +297,24 @@ flights %>%
 
 flights %>%
   select(distance, air_time) %>%  
-  mutate(speed = distance / (air_time / 60)) %>%
-  show_query()
+  mutate(speed = distance / (air_time / 60)) 
 
 ```
-
+**Challenge 5** 
+Your turn: write the same code in SQL (hint: `mutate(new_var = var 1 * var2` = `SELECT var1 * var2 AS near_var`)
 
 ## `filter` = `WHERE` 
 
 ```{r}
 
 flights %>% 
-  filter(month == 1, day == 1) %>%
-  show_query()
+  filter(month == 1, day == 1)
 
 ```
+**Challenge 6** 
+Your turn: write the same code in SQL (hint: `filter(condition1, condition2)` = `WHERE condition1 and condition2`)
 
-- Note that R and SQL operators are not exactly alike. R uses `!=` for `Not equal to`. SQL uses `<>` or `!=`. Furthermore, there are some cautions about using `NULL` (NA; unknown or missing): it should be `IS NULL` or `IS NOT NULL` not `=NULL` or `!=NULL`. Finally, some of SQL comparison operators are more intuitive than their R counterparts (`WHERE student_ID BETWEEN 1 and 100` `WHERE first_name LIKE 'Jae' WHERE last_name IN ('Kim', 'Lee', 'Park')`).
+- Note that R and SQL operators are not exactly alike. R uses `!=` for `Not equal to`. SQL uses `<>` or `!=`. Furthermore, there are some cautions about using `NULL` (NA; unknown or missing): it should be `IS NULL` or `IS NOT NULL` not `=NULL` or `!=NULL`. 
 
 ## `arrange` = `ORDER BY`
 
@@ -244,6 +325,8 @@ flights %>%
   show_query()
 
 ```
+**Challenge 7** 
+Your turn: write the same code in SQL (hint: `arrange(var1, desc(var2)) = ORDER BY var1, var2 DESC`)
 
 ## `summarise` = `SELECT` `AS` and `group by` = `GROUP BY`
 
@@ -251,126 +334,76 @@ flights %>%
 
 flights %>%
   group_by(month, day) %>%
+  summarise(delay = mean(dep_delay)) 
+
+```
+**Challenge 8** 
+Your turn: write the same code in SQL (hint: in SQL the order should be `SELECT group_var1, group_var2, AVG(old_var) AS new_var` -> `FROM` -> `GROUP BY`)
+
+- If you feel too much challenged, here's a help.
+
+```{r}
+
+flights %>%
+  group_by(month, day) %>%
   summarise(delay = mean(dep_delay)) %>%
+  show_query() # Show the SQL equivalent!
+
+```
+## Joins 
+
+- Using joins is simpler in R than it is in SQL.
+
+![](https://external-preview.redd.it/DmVn0-iEjJBsj4ndXaivDh2Ul5-JWi6UlwZ5U5nYnmc.jpg?width=960&crop=smart&auto=webp&s=5ce57d6fd68eda022ac8784170614f012f57680f)
+
+- However, more flexible joins exist in SQL and they are not available in R. 
+
+  - Joins involving 3+ tables are not supported.
+  - Some advanced joins available in SQL are not supported. 
+  - For more information, check out [`tidyquery`](https://github.com/ianmcook/tidyquery/issues) to see the latest developments.
+
+  
+```{r}
+
+flights %>% 
+  left_join(weather, by = c("year", "month")) %>%
   show_query()
 
 ```
 
-## Data visualization
-
-This part is from [RStudio's DB best practices](https://db.rstudio.com/best-practices/visualization/).
-
-- A typical ggplot2 
-
-```{r}
-
-ggplot(flights) +
-  geom_bar(aes(x = origin), stat = "count")
-
-```
-
-- Best practice: transforming data -> plotting results in R
+# Collect (pull)
 
 * `collect()` is used to pull the data. Depending on the data size, it may take a long time to run.
 
-```{r}
+- The following code won't work.
 
+> Error in UseMethod("collect") : no applicable method for 'collect' applied to an object of class "c('LayerInstance', 'Layer', 'ggproto', 'gg')"
+
+```{r eval = FALSE}
+
+origin_flights_plot <- flights %>%
+  group_by(origin) %>%
+  tally() %>%
+  ggplot() +
+  geom_col(aes(x = origin, y = n)) %>%
+  collect()
+
+```
+
+- This works. 
+
+```{r}
 df <- flights %>%
   group_by(origin) %>%
   tally() %>%
   collect()
 
-# Shifted from geom_bar() to geom_col() because the heights of bar plots were calculated by tally()
-
-ggplot(df) +
+origin_flights_plot <- ggplot(df) +
   geom_col(aes(x = origin, y = n))
 
+origin_flights_plot
 ```
 
-# SQL-way: SQL -> dplyr
-
-Remember the `dbGetQuery()` function from `DBI` package?
-
-## `select` = `SELECT`
-
-```{r}
-
-dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights")
-
-```
-
-## `mutate` = `SELECT` `AS`
-
-Also, note that you can combine functions from `DBI` and `dplyr`.
-
-```{r}
-
-  # DBI
-dbGetQuery(con, "SELECT distance, air_time, distance / air_time / 60.0 AS speed
-FROM flights") %>%
-  # dplyr
-  arrange(desc(air_time))
-
-```
-
-## `filter` = `WHERE` 
-
-```{r}
-
-dbGetQuery(con, "
-SELECT *
-FROM flights
-WHERE month = 1.0 AND day = 1.0
-")
-
-```
-
-## `arrange` = `ORDER BY`
-
-```{r}
-
-dbGetQuery(con, "
-SELECT *
-FROM flights
-ORDER BY carrier, arr_delay DESC
-")
-
-```
-
-## `summarise` = `SELECT` `AS` and `group by` = `GROUP BY`
-
-```{r}
-
-dbGetQuery(con, "
-SELECT month, day, AVG(dep_delay) AS delay
-FROM flights
-GROUP BY month, day
-")
-
-```
-
-- If you want to filter after `GROUP BY` then you should use `HAVING`. 
-
-# What we can't do
-
-Check out the issue section of [`queryparser`](https://github.com/ianmcook/queryparser) and that of [`tidyquery`](https://github.com/ianmcook/tidyquery/issues) to see the latest developments.
-
-**Limitations**
-
-    - Unions (`LEFT JOIN, INNER JOIN, RIGHT JOIN, CROSS JOIN, FULL OUTER JOIN`). `table1 LEFT JOIN table2 ON table1.shared_column = table2.shared_column`. Usually, 
-    `SELECT
-    FROM Unions 
-    GROUP by 
-    ORDER BY`
-    - Subqueries (usually used in a `FROM` or a `WHERE` statement)
-    `SELECT column
-    FROM data 
-    WHERE condition (SELECT column
-                     FROM data
-                     GROUP BY another column
-                     HAVING condition) <- this is subquery`
-    - WITH clause 
-  
 # References 
 
 - R Studio, [Database using R](https://db.rstudio.com/)
