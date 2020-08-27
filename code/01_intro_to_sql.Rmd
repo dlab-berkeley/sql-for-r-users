@@ -11,40 +11,19 @@ output:
     toc: yes
 ---
 
-```{r, echo=FALSE}
-# Run this, if knitting doesn't work
-knitr::opts_chunk$set(error = TRUE)
-```
-
 * Special thanks to Jacob Coblnetz (@Jacob_Coblnetz) for sharing his slides on the SQL workshop used at MIT. 
 
 # Motivation
 
-> 1. Designed vs. Found Data ([Salganik 2017](https://www.bitbybitbook.com/))
+> Techniques to deal with big data 
 
-- Designed (e.g., Survey data, Experimental data; Small/medium size) vs.
-
-- Found Data (e.g., Administrative data, Corporate data; Often Large) 
-
-> 2. The varieties of the datasets ([Pradeep and Moy 2015](https://rstudio-pubs-static.s3.amazonaws.com/72295_692737b667614d369bd87cb0f51c9a4b.html)): 
-
-- Small (what most of you have worked with)
-
-- Medium (1-2 GB)
-
-- Large (2 - 10 GB)
-
-- Very large (> 10 GB) 
-
-> 3. Recipes for big data:
-
-- Slice and dice: `read.csv("file_address", nrows = 20` or `data.table::fread()`
+- Medium sized file (still loadable but slow in processing in R)
+   - Try to reduce the size of the file using slicing and dicing
+   - Tools: 
+   `data.table::fread(file path, select = c("column 1", "column 2"))` imports data faster than `read.csv()`
     
-- Parallel processing: (`partition`, `summarize`, and `collect` from the `multidplyr` package)
-
-- Multiple sessions: `bigmemory::read.big.matrix()` or `ff::read.csv.ffdf()` 
-
-- Distributed filesystem: [RHadoop](https://github.com/RevolutionAnalytics/RHadoop/wiki). [Almost an only option for a dataset larger than 5TB](https://www.chrisstucchio.com/blog/2013/hadoop_hatred.html).
+- Large file (not loadable in R)
+   - A
      
 - SQL: Extracting data from a database. SQL is a staple tool in the non-academic world to perform this task. Key idea: Local dataframe -> Database. The focus of today's workshop 
      
