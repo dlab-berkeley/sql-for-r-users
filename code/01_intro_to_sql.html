@@ -2961,7 +2961,25 @@ ORDER BY column # Arrange
 <li>Copy a table to the database</li>
 </ol>
 <ul>
-<li>Option 1: You can create a table and insert rows manually.</li>
+<li><p>Option 1: You can create a table and insert rows manually.</p></li>
+<li><p>Table</p>
+<ul>
+<li>Collection of rows</li>
+<li>Collection of columns (fields or attributes)</li>
+<li>Each col has a type:
+<ul>
+<li>String: <code>VARCHAR(20)</code></li>
+<li>Integer: <code>INTEGER</code></li>
+<li>Floating-point: <code>FLOAT</code>, <code>DOUBLE</code></li>
+<li>Date/time: <code>DATE</code>, <code>TIME</code>, <code>DATETIME</code></li>
+</ul></li>
+<li><strong>Schema</strong>: the structure of the database
+<ul>
+<li>The table name</li>
+<li>The names and types of its columns</li>
+<li>Various optional additional information (constraints, etc)</li>
+</ul></li>
+</ul></li>
 </ul>
 <pre class="sql"><code>
 CREATE TABLE students (
@@ -3063,6 +3081,39 @@ dbListFields(con, &quot;flights&quot;)</code></pre>
 <pre class="r"><code>df &lt;- dbGetQuery(con, &quot;SELECT dep_delay, arr_delay FROM flights;&quot;) %&gt;%
   head(10) %&gt;%
   collect()</code></pre>
+<ul>
+<li><p>Counting rows</p>
+<ul>
+<li>Count all (*)</li>
+</ul></li>
+</ul>
+<pre class="r"><code>dbGetQuery(con, 
+          &quot;SELECT COUNT(*) 
+           FROM flights;&quot;) </code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["COUNT(*)"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"336776"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dbGetQuery(con, 
+           &quot;SELECT COUNT(dep_delay)
+           FROM flights;&quot;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["COUNT(dep_delay)"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"328521"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<ul>
+<li>Count distinct values</li>
+</ul>
+<pre class="r"><code>dbGetQuery(con, 
+           &quot;SELECT COUNT(DISTINCT dep_delay)
+           FROM flights;&quot;)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["COUNT(DISTINCT dep_delay)"],"name":[1],"type":["int"],"align":["right"]}],"data":[{"1":"527"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="tidy-way-dplyr---sql" class="section level1" number="9">
 <h1 number="9"><span class="header-section-number">9</span> Tidy-way: dplyr -&gt; SQL</h1>

@@ -151,6 +151,19 @@ pacman::p_load(
 
 - Option 1: You can create a table and insert rows manually.
 
+- Table
+    - Collection of rows 
+    - Collection of columns (fields or attributes)
+    - Each col has a type:
+        - String: `VARCHAR(20)`
+        - Integer: `INTEGER`
+        - Floating-point: `FLOAT`, `DOUBLE`
+        - Date/time: `DATE`, `TIME`, `DATETIME`
+    - **Schema**: the structure of the database
+        - The table name
+        - The names and types of its columns
+        - Various optional additional information (constraints, etc)
+        
 ```sql
 
 CREATE TABLE students (
@@ -263,6 +276,36 @@ df <- dbGetQuery(con, "SELECT dep_delay, arr_delay FROM flights;") %>%
 
 ```
   
+- Counting rows 
+
+  - Count all (*)
+  
+```{r}
+
+dbGetQuery(con, 
+          "SELECT COUNT(*) 
+           FROM flights;") 
+
+```
+  
+```{r}
+
+dbGetQuery(con, 
+           "SELECT COUNT(dep_delay)
+           FROM flights;")
+
+```
+
+  - Count distinct values 
+  
+```{r}
+dbGetQuery(con, 
+           "SELECT COUNT(DISTINCT dep_delay)
+           FROM flights;")
+
+```
+
+
 # Tidy-way: dplyr -> SQL
 
 Thanks to the `dbplyr` package you can use the `dplyr` syntax to query SQL. 
