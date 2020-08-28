@@ -38,6 +38,6 @@ pacman::p_load(
 
 ```
 
-* Special thanks to Jacob Coblnetz (@Jacob_Coblnetz) for sharing his slides on the SQL workshop used at MIT and Aaron Culich and Aniket Kesari at D-Lab at UC Berkeley for providing constructive feedback.
+* Special thanks to [Jacob Coblnetz](https://www.linkedin.com/in/jacobcoblentz/) for sharing his slides on the SQL workshop used at MIT and [Aaron Culich](https://dlab.berkeley.edu/people/aaron-culich) and [Aniket Kesari](https://dlab.berkeley.edu/people/aniket-kesari) at D-Lab at UC Berkeley for providing constructive feedback.
 
 ![](https://i.creativecommons.org/l/by/4.0/88x31.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
