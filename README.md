@@ -5,6 +5,8 @@
 
 by [Jae Yeon Kim](https://jaeyk.github.io/)
 
+File an [issue](https://github.com/dlab-berkeley/sql-for-r-users/issues) if you have problems, questions or suggestions.
+
 ## Overview
 
 SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop aims to demonstrate that SQL is easy to learn, if you already know how to use `dplyr` package in R. This will be a very hands-on workshop, with live coding. 
