@@ -15,15 +15,17 @@ output:
 
 # Motivation
 
-**Techniques to deal with big data**
-
+- Big data problem: data is too big to fit into memory (=local environment)
 - R reads data into random-access memory (RAM) at once and this object lives in memory entirely. So, object > memory will crash R. 
 - So, the key to deal with big data in R is reducing the size of data you want to bring into R.
+
+**Techniques to deal with big data**
+
 - Medium sized file (1-2 GB)
    - Try to reduce the size of the file using slicing and dicing
    - Tools: 
       - R:`data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does.
-      - Commnad line: [`csvkit`](https://csvkit.readthedocs.io/en/latest/) - a suite of command-line tools to and working with CSV 
+      - Command line: [`csvkit`](https://csvkit.readthedocs.io/en/latest/) - a suite of command-line tools to and working with CSV 
 - Large file (> 2-10 GB)
    - Put the data into a database and **ACCESS** it 
    - Explore the data and pull the outputs of interest 
@@ -41,7 +43,7 @@ output:
 - Remains the standard language for a relational database management system.
 
 - It's a DECLARATIVE language ([what to do > how to do](https://www.sqlite.org/queryplanner.html))
-  - Database management systems figurs optimal way to execute query (query optimization)
+  - Database management systems figures optimal way to execute query (query optimization)
     
 ```sql
 SELECT COLUMN FROM TABLE 
@@ -100,6 +102,8 @@ ORDER BY column # Arrange
 
 ```
 
+![](https://wizardzines.com/zines/sql/samples/from.png)
+
 # Setup
 
 Let's get to work. 
@@ -124,6 +128,8 @@ pacman::p_load(
  
  dbplyr, # use database with dplyr 
  
+ glue, # glue to automate workflow 
+ 
  nycflights13 # toy data 
 )
 
@@ -137,7 +143,7 @@ pacman::p_load(
 
 # Workflow 
 
-1. Create a database 
+1. Create and connect to a database 
 
 - ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Client-server-model.svg/500px-Client-server-model.svg.png)
 
@@ -187,6 +193,8 @@ INSERT INTO students(name, birth, gpa, grad)
 
 4. Pull the results of interests (**data**) using `collect()`
 
+5. Disconnect the database 
+
 # Create a database 
 
 ```{r}
@@ -206,12 +214,17 @@ con <- DBI::dbConnect(drv,
  # password = rstudioapi::askForPassword("Database password")
 #)
 
+dbListTables(con)
+
 ```
 
-# Copy an object to a table in the database (push)
+- Note that con is empty at this stage.
+
+# Copy an object as a table to the database (push)
 
 ```{r}
 
+# Copy objects to the data 
 copy_to(dest = con, 
         df = flights)
 
@@ -223,6 +236,13 @@ copy_to(dest = con,
 
 copy_to(dest = con, 
         df = weather)
+
+# If you want you can also decide what columns you want to copy:
+
+# copy_to(dest = con, 
+#          df = flights, 
+#          name = "flights",
+#          indexes = list(c("year", "tailnum", "dest")))
 
 ```
 
@@ -241,7 +261,7 @@ dbListFields(con, "weather")
 
 ```
 
-# Quick demonstrations 
+# Quick demonstrations:
 
 - SELECT desired columns 
 - FROM tables 
@@ -249,11 +269,47 @@ dbListFields(con, "weather")
 - Select all columns (*) from `flights` table and show the `first ten rows`
 - Note that you can combine SQL and R commands thanks to `dbplyr`.
 
+- Option 1 
+
 ```{r}
 
-dbGetQuery(con, "SELECT * FROM flights;") %>%
+DBI::dbGetQuery(con, "SELECT * FROM flights;") %>%
   head(10) 
 
+```
+
+- Option 2 (works faster)
+
+```{sql, connection = con}
+
+SELECT * 
+FROM flights 
+LIMIT 5
+
+```
+
+- Option 3 (automating workflow)
+
+  - When local variables are updated, the SQL query is also automatically updated.
+
+```{r}
+
+# Local variables 
+tbl <- "flights"
+var <- "dep_delay"
+num <- 5
+
+# Glue SQL query string 
+# Note that to indicate a numeric value, you don't need ``
+
+sql_query <- glue_sql("
+  SELECT {`var`}
+  FROM {`tbl`}
+  LIMIT {num} 
+  ", .con = con)
+
+# Run the query 
+dbGetQuery(con, sql_query)
 ```
 
 **Challenge 2** 
@@ -444,6 +500,14 @@ origin_flights_plot <- ggplot(df) +
   geom_col(aes(x = origin, y = n))
 
 origin_flights_plot
+```
+
+# Disconnect 
+
+```{r}
+
+DBI::dbDisconnect(con)
+
 ```
 
 # References 

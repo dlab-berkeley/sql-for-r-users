@@ -3,6 +3,6 @@ install.packages(c("pacman",
                    "dbplyr",
                    "DBI",
                    "RSQLite",
-                   "RPostgres",
+                   "glue",
                    "tidyquery",
                    "nycflights13")) 
