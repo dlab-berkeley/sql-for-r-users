@@ -103,6 +103,7 @@ ORDER BY column # Arrange
 ```
 
 ![](https://wizardzines.com/zines/sql/samples/from.png)
+This wonderfule zine was created by [Julia Evans](https://jvns.ca/).
 
 # Setup
 
