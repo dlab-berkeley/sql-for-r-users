@@ -15,7 +15,7 @@ output:
 
 # Motivation
 
-- Big data problem: data is too big to fit into memory (=local environment)
+- Big data problem: data is too big to fit into memory (=local environment).
 - R reads data into random-access memory (RAM) at once and this object lives in memory entirely. So, object > memory will crash R. 
 - So, the key to deal with big data in R is reducing the size of data you want to bring into R.
 
@@ -518,3 +518,4 @@ DBI::dbDisconnect(con)
 - [Introduction to dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html)
 - Josh Erickson, [SQL in R](http://dept.stat.lsa.umich.edu/~jerrick/courses/stat701/notes/sql.html), STAT 701, University of Michigan
 - [SQL zine](https://wizardzines.com/zines/sql/) by Julia Evans
+- [q](http://harelba.github.io/q/) - a command line tool that allows direct execution of SQL-like queries on CSVs/TSVs (and any other tabular text files) 
