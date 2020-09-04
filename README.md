@@ -13,7 +13,7 @@ SQL is a viable option for anyone working with a large dataset. For this reason,
 
 ## Learning objectives
 
-- Learning how to use R and SQL to access and query a database
+- Learning how to use R and SQL to access and query a database [Notebook](https://rawcdn.githack.com/dlab-berkeley/sql-for-r-users/016a2d8acf3297cef5221385863c262d1356b32b/code/01_intro_to_sql.html)
 
 ## Prerequisites 
 
