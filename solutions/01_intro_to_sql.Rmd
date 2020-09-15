@@ -56,6 +56,7 @@ WHERE ((`month` = 1.0) AND (`day` = 1.0))
 SELECT *
 FROM `flights`
 ORDER BY `carrier`, `arr_delay` DESC
+```
 
 **Challenge 8**
 ```sql

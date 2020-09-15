@@ -2824,11 +2824,9 @@ WHERE ((`month` = 1.0) AND (`day` = 1.0))</code></pre>
 <p><strong>Challenge 7</strong></p>
 <pre class="sql"><code>SELECT *
 FROM `flights`
-ORDER BY `carrier`, `arr_delay` DESC
-
-**Challenge 8**
-```sql
-SELECT `month`, `day`, AVG(`dep_delay`) AS `delay`
+ORDER BY `carrier`, `arr_delay` DESC</code></pre>
+<p><strong>Challenge 8</strong></p>
+<pre class="sql"><code>SELECT `month`, `day`, AVG(`dep_delay`) AS `delay`
 FROM `flights`
 GROUP BY `month`, `day`</code></pre>
 
