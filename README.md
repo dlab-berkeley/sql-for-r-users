@@ -1,6 +1,4 @@
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master?urlpath=rstudio)
-
 # SQL for R Users
 
 by [Jae Yeon Kim](https://jaeyk.github.io/)
@@ -23,7 +21,7 @@ SQL is a viable option for anyone working with a large dataset. For this reason,
 
 ## Setup
 
-Launch the binder. Please do so before attending the worskshop as it takes a while (especially, if you do it for the first time).
+Launch the [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master?urlpath=rstudio). Please do so before attending the worskshop as it takes a while (especially, if you do it for the first time).
 
 Or manually install the following packages.
 
