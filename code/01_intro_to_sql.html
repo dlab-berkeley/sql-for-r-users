@@ -2807,7 +2807,7 @@ div.tocify {
 <ul>
 <li>Big data problem: data is too big to fit into memory (=local environment).</li>
 <li>R reads data into random-access memory (RAM) at once and this object lives in memory entirely. So, object &gt; memory will crash R.</li>
-<li>So, the key to deal with big data in R is reducing the size of data you want to bring into R.</li>
+<li>So, the key to deal with big data in R is reducing the size of data you want to bring into it.</li>
 </ul>
 <p><strong>Techniques to deal with big data</strong></p>
 <ul>
@@ -2823,8 +2823,8 @@ div.tocify {
 <li>Large file (&gt; 2-10 GB)
 <ul>
 <li>Put the data into a database and <strong>ACCESS</strong> it</li>
-<li>Explore the data and pull the outputs of interest</li>
-<li>Tools
+<li>Explore the data and pull the objects of interest</li>
+<li>Types of databases
 <ul>
 <li>Relational database = a collection of tables (fixed columns and rows): SQL is a staple tool to define and <strong>query</strong> (focus of the workshop today) this type of database</li>
 <li>Non-relational database = a collection of documents (MongoDB), key-values (Redis and DyanoDB), wide-column stores (Cassandra and HBase), or graph (Neo4j and JanusGraph). This type of database does not preclude SQL. Note that NoSQL stands for <a href="https://www.mongodb.com/nosql-explained">“not only SQL.”</a></li>
@@ -2836,7 +2836,7 @@ div.tocify {
 <div id="what-is-sql" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> What is SQL?</h1>
 <ul>
-<li><p>Structured Query Language. Called SEQUEL and developed by IBM Corporation in the 1970s</p></li>
+<li><p>Structured Query Language. Called SEQUEL and developed by IBM Corporation in the 1970s.</p></li>
 <li><p>Remains the standard language for a relational database management system.</p></li>
 <li><p>It’s a DECLARATIVE language (<a href="https://www.sqlite.org/queryplanner.html">what to do &gt; how to do</a>)</p>
 <ul>
@@ -2941,6 +2941,24 @@ ORDER BY column # Arrange
 <ul>
 <li><code>pacman::p_load()</code> reduces steps for installing and loading several packages simultaneously.</li>
 </ul>
+<pre class="r"><code># pacman 
+if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></pre>
+<pre><code>## Loading required package: pacman</code></pre>
+<pre class="r"><code># The rest of pkgs 
+pacman::p_load(
+ 
+ tidyverse, # tidyverse packages 
+ 
+ DBI, # using SQL queries
+ 
+ RSQLite, # SQLite
+ 
+ dbplyr, # use database with dplyr 
+ 
+ glue, # glue to automate workflow 
+ 
+ nycflights13 # toy data 
+)</code></pre>
 </div>
 <div id="data-sets" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> Data sets</h2>
@@ -2981,7 +2999,7 @@ ORDER BY column # Arrange
 <ul>
 <li>The table name</li>
 <li>The names and types of its columns</li>
-<li>Various optional additional information (constraints, etc)</li>
+<li>Various optional additional information (e.g., constraints)</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2998,7 +3016,7 @@ INSERT INTO students(name, birth, gpa, grad)
       VALUES (&#39;Adam&#39;, &#39;2000-08-04&#39;, 4.0, 2020);
 </code></pre>
 <ul>
-<li>Option 2: Copy a file (object) to a table in a database using <code>copy_to</code>). We are taking this option as it’s fast and we focus on querying in this workshop.</li>
+<li>Option 2: Copy a file (object) to a table in a database using <code>copy_to</code>). We take this option as it’s fast and we would like to focus on querying in this workshop.</li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
 <li>Query the table</li>

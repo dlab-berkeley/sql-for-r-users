@@ -17,7 +17,7 @@ output:
 
 - Big data problem: data is too big to fit into memory (=local environment).
 - R reads data into random-access memory (RAM) at once and this object lives in memory entirely. So, object > memory will crash R. 
-- So, the key to deal with big data in R is reducing the size of data you want to bring into R.
+- So, the key to deal with big data in R is reducing the size of data you want to bring into it.
 
 **Techniques to deal with big data**
 
@@ -28,8 +28,8 @@ output:
       - Command line: [`csvkit`](https://csvkit.readthedocs.io/en/latest/) - a suite of command-line tools to and working with CSV 
 - Large file (> 2-10 GB)
    - Put the data into a database and **ACCESS** it 
-   - Explore the data and pull the outputs of interest 
-   - Tools
+   - Explore the data and pull the objects of interest 
+   - Types of databases
       - Relational database = a collection of tables (fixed columns and rows): SQL is a staple tool to define and **query** (focus of the workshop today) this type of database
       - Non-relational database = a collection of documents (MongoDB), key-values (Redis and DyanoDB), wide-column stores (Cassandra and HBase), or graph (Neo4j and JanusGraph). This type of database does not preclude SQL. Note that NoSQL stands for ["not only SQL."](https://www.mongodb.com/nosql-explained)
      
@@ -38,7 +38,7 @@ output:
 
 # What is SQL? 
 
-- Structured Query Language. Called SEQUEL and developed by IBM Corporation in the 1970s 
+- Structured Query Language. Called SEQUEL and developed by IBM Corporation in the 1970s.
 
 - Remains the standard language for a relational database management system.
 
@@ -113,7 +113,7 @@ Let's get to work.
 
 - `pacman::p_load()` reduces steps for installing and loading several packages simultaneously. 
 
-```{r include = FALSE}
+```{r}
 
 # pacman 
 if (!require("pacman")) install.packages("pacman")
@@ -169,7 +169,7 @@ pacman::p_load(
     - **Schema**: the structure of the database
         - The table name
         - The names and types of its columns
-        - Various optional additional information (constraints, etc)
+        - Various optional additional information (e.g., constraints)
         
 ```sql
 
@@ -186,7 +186,7 @@ INSERT INTO students(name, birth, gpa, grad)
 
 ```
 
-- Option 2: Copy a file (object) to a table in a database using `copy_to`). We are taking this option as it's fast and we focus on querying in this workshop. 
+- Option 2: Copy a file (object) to a table in a database using `copy_to`). We take this option as it's fast and we would like to focus on querying in this workshop. 
 
 3. Query the table 
 
@@ -311,6 +311,7 @@ sql_query <- glue_sql("
 
 # Run the query 
 dbGetQuery(con, sql_query)
+
 ```
 
 **Challenge 2** 
