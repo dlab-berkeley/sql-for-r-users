@@ -1,5 +1,5 @@
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master?urlpath=rstudio)
 
 # SQL for R Users
 
@@ -9,17 +9,17 @@ File an [issue](https://github.com/dlab-berkeley/sql-for-r-users/issues) if you 
 
 ## Overview
 
-SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop aims to demonstrate that SQL is easy to learn, if you already know how to use `dplyr` package in R. This will be a very hands-on workshop, with live coding. 
+SQL is a viable option for anyone working with a large dataset. For this reason, SQL is a must-skill if you intend to work with big data or data-intensive organizations. The workshop aims to demonstrate that SQL is easy to learn, if you already know how to use `dplyr` package in R. This will be a very hands-on workshop, with live coding.
 
 ## Learning objectives
 
 - Learning how to use R and SQL to access and query a database [[Notebook](https://rawcdn.githack.com/dlab-berkeley/sql-for-r-users/1d111531a2f5ead352d836511207da31db0dfba1/code/01_intro_to_sql.html)]
 
-## Prerequisites 
+## Prerequisites
 
 - Familiarity with `dplyr` package in R
 
-- No background knowledge in SQL required 
+- No background knowledge in SQL required
 
 ## Setup
 
