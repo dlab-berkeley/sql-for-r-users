@@ -23,6 +23,21 @@ SQL is a viable option for anyone working with a large dataset. For this reason,
 
 Launch the [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/dlab-berkeley/sql-for-r-users/master?urlpath=rstudio). Please do so before attending the worskshop as it takes a while (especially, if you do it for the first time).
 
+Or manually install the following packages.
+
+```r
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+    tidyverse, # tidyverse packages
+    dbplyr, # database with dplyr
+    DBI, # SQL queries
+    RSQLite, # SQLite
+    nycflights13 # toy data
+)
+
+```
+
 * Special thanks to [Jacob Coblnetz](https://www.linkedin.com/in/jacobcoblentz/) for sharing his slides on the SQL workshop used at MIT and [Aaron Culich](https://dlab.berkeley.edu/people/aaron-culich) and [Aniket Kesari](https://dlab.berkeley.edu/people/aniket-kesari) at D-Lab at UC Berkeley for providing constructive feedback.
 
 ![](https://i.creativecommons.org/l/by/4.0/88x31.png) This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
