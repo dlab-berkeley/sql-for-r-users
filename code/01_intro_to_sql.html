@@ -2864,7 +2864,7 @@ div.tocify {
 <li>Try to reduce the size of the file using slicing and dicing</li>
 <li>Tools:
 <ul>
-<li>R:<code>data.table::fread(file path, select = c(&quot;column 1&quot;, &quot;column 2&quot;))</code>. This command imports data faster than <code>read.csv()</code> does.</li>
+<li>R:<code>data.table::fread(file path, select = c(&quot;column 1&quot;, &quot;column 2&quot;))</code>. This command imports data faster than <code>read.csv()</code> does. <code>vroom::vroom()</code> is even faster.</li>
 <li>Command line: <a href="https://csvkit.readthedocs.io/en/latest/"><code>csvkit</code></a> - a suite of command-line tools to and working with CSV</li>
 </ul></li>
 </ul></li>
@@ -3562,7 +3562,7 @@ weather &lt;- con %&gt;% tbl(&quot;weather&quot;)</code></pre>
   </script>
 </div>
 <p><strong>Challenge 5</strong></p>
-<p>Your turn: write the same code in SQL. ( Hint: <code>mutate(new_var = var 1 * var2</code> (R) = <code>SELECT var1 * var2 AS near_var</code> (SQL)</p>
+<p>Your turn: write the same code in SQL. Hint: <code>mutate(new_var = var 1 * var2</code> (R) = <code>SELECT var1 * var2 AS near_var</code> (SQL)</p>
 </div>
 <div id="filter-where" class="section level2" number="9.3">
 <h2 number="9.3"><span class="header-section-number">9.3</span> <code>filter</code> = <code>WHERE</code></h2>
@@ -3574,7 +3574,7 @@ weather &lt;- con %&gt;% tbl(&quot;weather&quot;)</code></pre>
   </script>
 </div>
 <p><strong>Challenge 6</strong></p>
-<p>Your turn: write the same code in SQL (hint: <code>filter(condition1, condition2)</code> = <code>WHERE condition1 and condition2</code>)</p>
+<p>Your turn: write the same code in SQL Hint: <code>filter(condition1, condition2)</code> = <code>WHERE condition1 and condition2</code></p>
 <p><strong>Additional tips</strong></p>
 <p>Note that R and SQL operators are not exactly alike. R uses <code>!=</code> for <code>Not equal to</code>. SQL uses <code>&lt;&gt;</code> or <code>!=</code>. Furthermore, there are some cautions about using <code>NULL</code> (NA; unknown or missing): it should be <code>IS NULL</code> or <code>IS NOT NULL</code> not <code>=NULL</code> or <code>!=NULL</code>.</p>
 <p>Another pro-tip is <a href="https://www.w3schools.com/sql/sql_like.asp"><code>LIKE</code> operator</a>, which is used in a <code>WHERE</code> statement to find values based on string patterns.</p>
@@ -3624,7 +3624,7 @@ WHERE origin LIKE &#39;J%&#39;; -- Find any origin values that start with &quot;
   </script>
 </div>
 <p><strong>Challenge 8</strong></p>
-<p>Your turn: write the same code in SQL (hint: in SQL the order should be <code>SELECT group_var1, group_var2, AVG(old_var) AS new_var</code> -&gt; <code>FROM</code> -&gt; <code>GROUP BY</code>)</p>
+<p>Your turn: write the same code in SQL Hint: in SQL the order should be <code>SELECT group_var1, group_var2, AVG(old_var) AS new_var</code> -&gt; <code>FROM</code> -&gt; <code>GROUP BY</code></p>
 <ul>
 <li>If you feel too much challenged, here’s a help.</li>
 </ul>

@@ -24,7 +24,7 @@ output:
 - Medium sized file (1-2 GB)
   - Try to reduce the size of the file using slicing and dicing
   - Tools: 
-      - R:`data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does.
+      - R:`data.table::fread(file path, select = c("column 1", "column 2"))`. This command imports data faster than `read.csv()` does. `vroom::vroom()` is even faster.
       - Command line: [`csvkit`](https://csvkit.readthedocs.io/en/latest/) - a suite of command-line tools to and working with CSV 
 
 - Large file (> 2-10 GB)
@@ -429,7 +429,7 @@ flights %>%
 ```
 **Challenge 5** 
 
-Your turn: write the same code in SQL. (
+Your turn: write the same code in SQL. 
 Hint: `mutate(new_var = var 1 * var2` (R) = `SELECT var1 * var2 AS near_var` (SQL)
 
 ## `filter` = `WHERE` 
@@ -443,7 +443,8 @@ flights %>%
 
 **Challenge 6** 
 
-Your turn: write the same code in SQL (hint: `filter(condition1, condition2)` = `WHERE condition1 and condition2`)
+Your turn: write the same code in SQL 
+Hint: `filter(condition1, condition2)` = `WHERE condition1 and condition2`
 
 **Additional tips**
 
@@ -485,7 +486,8 @@ flights %>%
 
 **Challenge 8** 
 
-Your turn: write the same code in SQL (hint: in SQL the order should be `SELECT group_var1, group_var2, AVG(old_var) AS new_var` -> `FROM` -> `GROUP BY`)
+Your turn: write the same code in SQL 
+Hint: in SQL the order should be `SELECT group_var1, group_var2, AVG(old_var) AS new_var` -> `FROM` -> `GROUP BY`
 
 - If you feel too much challenged, here's a help.
 
